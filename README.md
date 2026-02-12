@@ -3,8 +3,6 @@
 TypeScript sandbox for quick experiments and testing.
 
 ```bash
-```
-```bash
 # Run TypeScript directly
 npx ts-node test.ts
 
