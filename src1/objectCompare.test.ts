@@ -1,4 +1,4 @@
-import { objectCompare } from "./index.ts";
+import { objectCompare } from "./objectCompare.ts";
 
 describe("Basic test", () => {
   test("empty objects should pass", () => {
@@ -40,4 +40,3 @@ describe("Basic test", () => {
     });
   });
 });
-
