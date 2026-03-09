@@ -1,60 +1,70 @@
-export function objectCompare(o1: Object, o2: Object): Boolean {
-  if (Object.keys(o1).length != Object.keys(o2).length) {
-    return false;
+/*
+Part 1
+
+Imagine you are building a chatbot-like negotiation tool. The UI for running chats already exists, 
+but you need a tool to design and visualize chat flows that the frontend would run.
+
+Each different type of negotiation will use its own chat flow.
+
+As an MVP, you will support only simple flows - just a linear series of text messages displayed to the user in order. 
+Each text message has:
+  * text (the actual displayed string)
+  * color (optional CSS attribute)
+
+First, design a data structure that stores a single chat flow, i.e a sequence of text messages.
+
+Then implement a function that allows adding a new message to the end of an existing chat flow.
+
+
+// Requirements
+// 1M, utf 
+*/
+
+type ChatFlow = ChatMessage[]
+
+
+export class ChatMessage {
+  text: string
+  color: string
+  childs: ChatMessage[]
+  level: number
+
+  public constructor(text: string, color: string, level = 0) {
+    this.text = text
+    this.color = color
+    this.childs = []
+    this.level = level
   }
 
-  // iterate properties
-  for (const [k1, v1] of Object.entries(o1)) {
-    const v2 = o2[k1];
-
-    // key not found
-    if (v2 == undefined) {
-      return false;
-    }
-
-    // type mismatch for keys
-    if (typeof v1 != typeof v2) {
-      return false;
-    }
-
-    switch (typeof v1) {
-      case "string":
-      case "number":
-        if (v1 !== v2) return false;
-        break;
-    }
-
-    // is string
-    // is int
-    // compare arrays
-    if (Array.isArray(v1)) {
-      return arrayCompare(v1, v2);
-    }
-
-    if (v1 instanceof Set) {
-      return setCompare(v1);
-    }
-
-    if (v1 instanceof Map) {
-      return mapCompare(v1, v2);
-    }
-
-    throw new Error("unsupported type");
+  public toString() {
+    let s = ("\n" + " ".repeat(this.level)) + this.text
+    s = s + (this.color !== "" ? `(color: "${this.color}")` : '');
+    s = s + this.childs.toString()
+    return s;
   }
-
-  return true;
 }
 
-// TODO: implement
-function arrayCompare(v1: Array, v2: Array): boolean {
-  return true;
+const messages: ChatMessage[] = [];
+export function addChat(text: string, color: string = "", level: number = 0): ChatMessage[] {
+  const msg: ChatMessage = {
+    text,
+    color,
+    level,
+    childs: []
+  }
+  messages.push(msg)
+
+  return messages
 }
 
-// TODO implement
-function mapCompare(v1: Map, v2: Map): boolean {
-  return true;
+export function toString(chatFlow: ChatFlow) {
+  let result = ''
+  for (const msg of chatFlow) {
+    result = result + msg.toString()
+  }
+  return result
 }
 
-function setCompare(v1: Set, v2: Set): boolean {
-  return true;
+export function add(node: ChatMessage, parent: ChatMessage) {
+  parent.childs.push(node)
 }
